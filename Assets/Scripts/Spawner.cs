@@ -1,4 +1,7 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Pool;
+using Random = UnityEngine.Random;
 
 public class Spawner : MonoBehaviour
 {
@@ -10,45 +13,63 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float _repeatRate = 1f;
     [SerializeField] private Material _material;
     [SerializeField] private float _quaternionZero = 0f;
-    [SerializeField] private Pool _pool;
-    [SerializeField] private GameObject _cube;
+    [SerializeField] private Cube _cube;
+    [SerializeField] private int _poolCapacity = 5;
+    [SerializeField] private int _poolMaxSize = 5;
+    
+    private ObjectPool<Cube> _pool;
+    
+    private void Awake()
+    {
+        _pool = new ObjectPool<Cube>(
+            createFunc: () => Instantiate(_cube),
+            actionOnGet: (cube) => GetAction(cube),
+            actionOnRelease: (cube) => cube.gameObject.SetActive(false),
+            actionOnDestroy: (cube) => Destroy(cube),
+            collectionCheck: true,
+            defaultCapacity: _poolCapacity,
+            maxSize: _poolMaxSize
+        );
+    }
     
     private void Start()
     {
-        InvokeRepeating(nameof(OnGet), 0, _repeatRate);
-    }
-    private void OnEnable()
-    {
-        Cube.EndTime += CubeOnEndTime;
+        StartCoroutine(SpawnerCube());
     }
 
-    private void OnDisable()
+    private IEnumerator SpawnerCube()
     {
-        Cube.EndTime -= CubeOnEndTime;
-    }
-
-    private void OnGet()
-    {
-        GameObject cube = ActionOnGet(_cube);
+        WaitForSeconds wait = new(_repeatRate);
         
-        _pool.GetCubes(cube);
+        while (true)
+        {
+            SpawnCube();
+            
+            yield return wait;
+        }
     }
-
-    private void CubeOnEndTime(GameObject obj)
+    
+    private void GetAction(Cube cube)
+    {
+        cube.CollusionPlatform(_material);
+        
+        cube.CollisionEnter += CubeRelease;
+    }
+    
+    private void CubeRelease(Cube cube)
     {
         Debug.Log("я упал на платформу");
         
-        _pool.ReleaseCube(obj);
+        cube.CollisionEnter -= CubeRelease;
+        
+        _pool.Release(cube);
     }
     
-    private GameObject ActionOnGet(GameObject obj)
+    private void SpawnCube()
     {
-        obj.transform.position = new Vector3(Random.Range(_minXPosition, _maxXPosition), _yPosition, Random.Range(_minZPosition, _maxZPosition));
-        obj.transform.rotation = new Quaternion(_quaternionZero, _quaternionZero, _quaternionZero, _quaternionZero);
-        obj.SetActive(true);
-        obj.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        obj.GetComponent<Renderer>().material = _material;
-
-        return obj;
+        Cube cube = _pool.Get();
+        
+        cube.transform.position = new Vector3(Random.Range(_minXPosition, _maxXPosition), _yPosition, Random.Range(_minZPosition, _maxZPosition));
+        cube.gameObject.SetActive(true);
     } 
 }

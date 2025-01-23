@@ -9,36 +9,46 @@ public class Cube : MonoBehaviour
     private Renderer _renderer;
     private int _minSecond = 2;
     private int _maxSecond = 6;
-    private Coroutine _releaseActivation;
-    private bool onCollisionPlatform = true;
+    private bool _collisionPlatform = true;
 
-    public static event Action<GameObject> EndTime;
+    public event Action<Cube> CollisionEnter;
+
+    public void CollusionPlatform(Material material)
+    {
+        _collisionPlatform = true;
+        _renderer.material = material;
+    }
     
     private void Awake()
     {
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
+        
         _renderer = GetComponent<Renderer>();
     }
 
     private IEnumerator ReleaseActivation()
     {
-        var wait = new WaitForSecondsRealtime(GetRandomSecond());
+        yield return new WaitForSecondsRealtime(GetRandomSecond());
         
-        yield return wait;
+        CollisionEnter?.Invoke(this);
         
-        EndTime?.Invoke(gameObject);
+        Debug.Log("Время кончилось");
     }
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.GetComponent<Platform>() && onCollisionPlatform)
+        if (_collisionPlatform)
         {
-            onCollisionPlatform = false;
-
-            _color = other.gameObject.GetComponent<Platform>().NewColor;
+            if (other.gameObject.GetComponent<Platform>())
+            {
+                _collisionPlatform = false;
             
-            ApplyNewColor(_color);
-            
-            _releaseActivation = StartCoroutine(ReleaseActivation());
+                _color = other.gameObject.GetComponent<Platform>().NewColor;
+                        
+                ApplyNewColor(_color);
+                        
+                StartCoroutine(ReleaseActivation());
+            }
         }
     }
 
@@ -48,9 +58,7 @@ public class Cube : MonoBehaviour
     }
     
     private int GetRandomSecond()
-    {
-        int second = Random.Range(_minSecond, _maxSecond);
-
-        return second;
+    { 
+        return Random.Range(_minSecond, _maxSecond);
     }
 }
