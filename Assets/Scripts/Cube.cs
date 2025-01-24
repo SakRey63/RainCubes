@@ -28,22 +28,20 @@ public class Cube : MonoBehaviour
 
     private IEnumerator ReleaseActivation()
     {
-        yield return new WaitForSecondsRealtime(GetRandomSecond());
+        yield return new WaitForSeconds(GetRandomSecond());
         
         CollisionEnter?.Invoke(this);
-        
-        Debug.Log("Время кончилось");
     }
 
     private void OnCollisionEnter(Collision other)
     {
         if (_collisionPlatform)
         {
-            if (other.gameObject.GetComponent<Platform>())
+            if (other.gameObject.TryGetComponent(out Platform platform))
             {
                 _collisionPlatform = false;
             
-                _color = other.gameObject.GetComponent<Platform>().NewColor;
+                _color = platform.NewColor;
                         
                 ApplyNewColor(_color);
                         

@@ -12,7 +12,6 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float _maxZPosition = 13.3f;
     [SerializeField] private float _repeatRate = 1f;
     [SerializeField] private Material _material;
-    [SerializeField] private float _quaternionZero = 0f;
     [SerializeField] private Cube _cube;
     [SerializeField] private int _poolCapacity = 5;
     [SerializeField] private int _poolMaxSize = 5;
@@ -58,8 +57,6 @@ public class Spawner : MonoBehaviour
     
     private void CubeRelease(Cube cube)
     {
-        Debug.Log("я упал на платформу");
-        
         cube.CollisionEnter -= CubeRelease;
         
         _pool.Release(cube);
