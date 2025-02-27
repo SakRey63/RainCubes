@@ -5,50 +5,56 @@ using Random = UnityEngine.Random;
 
 public class Cube : MonoBehaviour
 {
+    [SerializeField] private float _delay;
+    
     private Color _color;
     private Renderer _renderer;
     private int _minSecond = 2;
     private int _maxSecond = 6;
-    private bool _collisionPlatform = true;
+    private bool _collisionPlatform;
 
     public event Action<Cube> CollisionEnter;
-
-    public void CollusionPlatform(Material material)
-    {
-        _collisionPlatform = true;
-        _renderer.material = material;
-    }
+    
+    public Rigidbody Rigidbody { get; private set; }
     
     private void Awake()
     {
-        GetComponent<Rigidbody>().velocity = Vector3.zero;
-        
         _renderer = GetComponent<Renderer>();
+        
+        if (TryGetComponent(out Rigidbody rigidbody))
+        {
+            Rigidbody = rigidbody;
+        }
     }
 
     private IEnumerator ReleaseActivation()
     {
-        yield return new WaitForSeconds(GetRandomSecond());
+        _delay = GetRandomSecond();
+        
+        yield return new WaitForSeconds(_delay);
         
         CollisionEnter?.Invoke(this);
     }
 
     private void OnCollisionEnter(Collision other)
     {
-        if (_collisionPlatform)
-        {
-            if (other.gameObject.TryGetComponent(out Platform platform))
-            {
-                _collisionPlatform = false;
+        if (other.gameObject.TryGetComponent(out Platform platform) && _collisionPlatform)
+        { 
+            _collisionPlatform = false;
             
-                _color = platform.NewColor;
+            _color = platform.NewColor;
                         
-                ApplyNewColor(_color);
+            ApplyNewColor(_color);
                         
-                StartCoroutine(ReleaseActivation());
-            }
+            StartCoroutine(ReleaseActivation());
         }
     }
+    
+    public void CollusionPlatform(Material material)
+    {
+        _collisionPlatform = true;
+        _renderer.material = material;
+    }    
 
     private void ApplyNewColor(Color color)
     {
