@@ -41,8 +41,6 @@ public class SpawnerCube : Spawner<Cube>
         CreateRandomStartPosition(cube);
         
         cube.CollusionPlatform(_material);
-
-        cube.AddComponent<ColorChanger>();
         
         base.GetAction(cube);
 

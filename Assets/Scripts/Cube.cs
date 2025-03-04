@@ -6,10 +6,10 @@ using Random = UnityEngine.Random;
 public class Cube : MonoBehaviour
 {
     [SerializeField] private float _delay;
+    [SerializeField] private ColorChanger _colorChanger;
     
     private Color _color;
     private Renderer _renderer;
-    private ColorChanger _colorChanger;
     private int _minSecond = 2;
     private int _maxSecond = 6;
     private bool _collisionPlatform;
@@ -41,8 +41,6 @@ public class Cube : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent<Platform>(out _) && _collisionPlatform)
         { 
-            _colorChanger = GetComponent<ColorChanger>();
-            
             _collisionPlatform = false;
 
             _color = _colorChanger.ChangerColor();
