@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SpawnerCube : Spawner<Cube>
@@ -40,6 +41,8 @@ public class SpawnerCube : Spawner<Cube>
         CreateRandomStartPosition(cube);
         
         cube.CollusionPlatform(_material);
+
+        cube.AddComponent<ColorChanger>();
         
         base.GetAction(cube);
 

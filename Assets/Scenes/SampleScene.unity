@@ -327,7 +327,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0446b7b6a4184d945a0eecad7a5d2ef4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _color: {r: 0, g: 0, b: 1, a: 0}
 --- !u!1 &374927248
 GameObject:
   m_ObjectHideFlags: 0
@@ -607,6 +606,7 @@ GameObject:
   - component: {fileID: 441688140}
   - component: {fileID: 441688142}
   - component: {fileID: 441688143}
+  - component: {fileID: 441688144}
   m_Layer: 0
   m_Name: Platforms
   m_TagString: Untagged
@@ -670,6 +670,18 @@ MonoBehaviour:
   _poolCapaciti: 15
   _poolMaxSize: 30
   _spawnerCube: {fileID: 441688142}
+--- !u!114 &441688144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 441688139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b37f340de29abe488794654386ce908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1489,7 +1501,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0446b7b6a4184d945a0eecad7a5d2ef4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _color: {r: 1, g: 0, b: 0, a: 0}
 --- !u!1 &1460366026
 GameObject:
   m_ObjectHideFlags: 0
@@ -1713,7 +1724,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0446b7b6a4184d945a0eecad7a5d2ef4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _color: {r: 0, g: 1, b: 0, a: 0}
 --- !u!1 &1892028201
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,6 +9,7 @@ public class Cube : MonoBehaviour
     
     private Color _color;
     private Renderer _renderer;
+    private ColorChanger _colorChanger;
     private int _minSecond = 2;
     private int _maxSecond = 6;
     private bool _collisionPlatform;
@@ -38,11 +39,13 @@ public class Cube : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.TryGetComponent(out Platform platform) && _collisionPlatform)
+        if (other.gameObject.TryGetComponent<Platform>(out _) && _collisionPlatform)
         { 
-            _collisionPlatform = false;
+            _colorChanger = GetComponent<ColorChanger>();
             
-            _color = platform.NewColor;
+            _collisionPlatform = false;
+
+            _color = _colorChanger.ChangerColor();
                         
             ApplyNewColor(_color);
                         

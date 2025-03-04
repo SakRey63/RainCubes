@@ -1,13 +1,11 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class Bomb : MonoBehaviour
 {
-    [SerializeField] private float _forseExplosions = 300;
-    [SerializeField] private float _radiusExplosions = 50;
+    [SerializeField] private Exploder _exploder;
      
     private int _minSecond = 2;
     private int _maxSecond = 6;
@@ -43,34 +41,14 @@ public class Bomb : MonoBehaviour
             yield return null;
         }
         
-        Explode();
+        _exploder.Explode();
+        
+        Exploded?.Invoke(this);
     }
 
     public void ReturnColorAlfa()
     {
         _renderer.material.color = new Color(0, 0, 0, _maxValue);
-    }
-
-    private void Explode()
-    {
-        Collider[] cubeshits = Physics.OverlapSphere(transform.position, _radiusExplosions);
-
-        List<Rigidbody> cubes = new();
-
-        foreach (var hit in cubeshits)
-        {
-            if (hit.attachedRigidbody != null)
-            {
-                cubes.Add(hit.attachedRigidbody);
-            }
-        }
-
-        foreach (var cube in cubes)
-        {
-            cube.AddExplosionForce(_forseExplosions, transform.position, _radiusExplosions);
-        }
-        
-        Exploded?.Invoke(this);
     }
 
     private int GetRandomSecond()
