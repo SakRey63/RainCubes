@@ -21,10 +21,10 @@ public class Bomb : MonoBehaviour
 
     private void OnEnable()
     {
-        StartCoroutine(ChangeTransparency());
+        StartCoroutine(Explode());
     }
 
-    private IEnumerator ChangeTransparency()
+    private IEnumerator Explode()
     {
         int delay = GetRandomSecond();
         
